@@ -1,10 +1,14 @@
+
+
 // ignore_for_file: deprecated_member_use
-
-/// File: ui_kit.dart
-/// Purpose: Reusable UI building blocks used across all screens. Defines
-///          the unique visual language of the system.
-library;
-
+/*
+group names
+      ///K Loape 221001040
+      ///P Lesekele 223035639
+      ///NM Maphosa 223039784
+      ///T Dasheka 219007064
+      ///Maleke 222009259
+ */
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
 
@@ -139,12 +143,21 @@ class PrimaryButton extends StatelessWidget {
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if (icon != null) ...[
                     Icon(icon, size: 18),
                     const SizedBox(width: 8),
                   ],
-                  Text(label.toUpperCase()),
+                  // Flexible + ellipsis prevents overflow on narrow widths
+                  // like inside a dialog.
+                  Flexible(
+                    child: Text(
+                      label.toUpperCase(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
                 ],
               ),
       ),
@@ -190,12 +203,19 @@ class OutlineButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
               Icon(icon, size: 16),
               const SizedBox(width: 8),
             ],
-            Text(label.toUpperCase()),
+            Flexible(
+              child: Text(
+                label.toUpperCase(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -296,6 +316,3 @@ class _BracketPainter extends CustomPainter {
   @override
   bool shouldRepaint(_BracketPainter old) => false;
 }
-
-
-
