@@ -1,17 +1,82 @@
-# student_assistant_app
+# Student Assistant Application System
 
-A new Flutter project.
+## 📌 Overview
+This is a Flutter mobile application developed for managing Student Assistant applications in the IT Department.
 
-## Getting Started
+The system allows students to apply for assistant positions and enables admin users to review, approve, or reject applications.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Features
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### 👨‍🎓 Student
+- Login using Supabase Authentication
+- Submit Student Assistant application
+- View application status
+- Edit application (while pending)
+- Delete application
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 👨‍💼 Admin
+- View all applications
+- Approve or reject applications
+- Update application status
+- Delete invalid applications
+
+---
+
+## 🏗️ Architecture
+The application follows the **MVVM (Model-View-ViewModel)** architecture:
+
+- **Model** → Handles data and business logic  
+- **ViewModel** → Manages state and connects UI to Model  
+- **View** → UI components (Flutter screens)  
+
+State management is implemented using **Provider**.
+
+---
+
+## 🧠 Technologies Used
+- Flutter
+- Dart
+- Provider (State Management)
+- Supabase (Authentication & Database)
+- GitHub (Version Control)
+
+---
+
+## 🔄 CRUD Operations
+
+| Operation | Description |
+|----------|------------|
+| Create   | Submit new application |
+| Read     | View applications |
+| Update   | Edit application (if pending) |
+| Delete   | Remove application |
+
+---
+
+## 🔐 Authentication
+- Implemented using Supabase Authentication
+- Role-based access:
+  - Student
+  - Admin
+
+---
+
+📊 Contribution
+
+Each member contributed to:
+
+UI development
+ViewModel logic
+Supabase integration
+Testing and debugging
+
+📌 Notes
+-Only one application per student is allowed
+-Maximum of two modules per application
+-Admin approval is required for final status
+
+🏁 Conclusion
+
+This system improves the management of Student Assistant applications by providing a structured, secure, and user-friendly platform.
