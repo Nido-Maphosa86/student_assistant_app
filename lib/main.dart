@@ -27,8 +27,8 @@ import 'viewmodels/application_viewmodel.dart';
 // (Assignment: "all group members must connect to a single Supabase
 // project"). Both must be set before the app runs.
 // =========================================================================
-const String kSupabaseUrl = 'https://duxioizxwfqeyqnsclqm.supabase.co';
-const String kSupabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1eGlvaXp4d2ZxZXlxbnNjbHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3ODQ1MjIsImV4cCI6MjA5NDM2MDUyMn0.IVRWH8kjenD3yscIB6jY1b0giht94QeS0rnUZ-FcXIA';
+const String kSupabaseUrl = 'https://evctmumnrsixnmiluenv.supabase.co';
+const String kSupabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2Y3RtdW1ucnNpeG5taWx1ZW52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NjIxMzYsImV4cCI6MjA5NDQzODEzNn0.qatKEW2qdBUEgTEE-NPZXQXB0BrjJIiAE4M6xsOgT3E';
 
 Future<void> main() async {
   // Required before any async work in main (Unit 5)
