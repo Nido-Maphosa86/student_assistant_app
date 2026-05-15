@@ -1,7 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
-/* Student Numbers: 
-
+/* Student numbers
+223039784 Nido Maphosa
+223035639 PM Lesekele
+219007064 T Dasheka
+221001040 K.Loape
+224020157 KP Molelekeng
  File: admin_dashboard_view.dart
  Purpose: Admin Dashboard (Assignment 2.1 - Read/Update/Delete operations).
           Displays all applications, allows filtering by status, and
@@ -440,6 +444,22 @@ class _AdminAppCard extends StatelessWidget {
                       _ModuleBadge(label: app.module2Code!.split(' - ').first),
                     _MutedBadge(label: app.yearOfStudy),
                   ],
+                ),
+
+                // ----- VIEW DETAILS BUTTON (Unit 3 navigation) -----
+                // Opens the same Application Detail screen students use,
+                // where the admin can tap the supporting document tile
+                // to review the uploaded file (Unit 5 Storage URL).
+                const SizedBox(height: 14),
+                _MiniButton(
+                  label: 'VIEW DETAILS & DOCUMENT',
+                  icon: Icons.description_outlined,
+                  color: AppTheme.surfaceHi,
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    RouteManager.applicationDetail,
+                    arguments: app,
+                  ),
                 ),
 
                 if (app.status == 'pending') ...[

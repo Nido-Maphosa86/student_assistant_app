@@ -1,7 +1,12 @@
-/**
- * Student Numbers: 210000001, 210000002, 210000003, 210000004, 210000005
- * Student Names  : [Member 1], [Member 2], [Member 3], [Member 4], [Member 5]
- * File: application_form_view.dart
+// ignore_for_file: deprecated_member_use
+
+/*
+ Student numbers
+223039784 Nido Maphosa
+223035639 PM Lesekele
+219007064 T Dasheka
+221001040 K.Loape
+224020157 KP Molelekeng
  * Purpose: Student Assistant Application Form (Assignment 1.3 - Create /
  *          Update Operation). Demonstrates Unit 4 form handling: GlobalKey,
  *          TextFormField with validators, controlled input via dropdowns,
@@ -18,6 +23,8 @@ import '../models/module_catalogue.dart';
 import '../routes/route_manager.dart';
 import '../viewmodels/application_viewmodel.dart';
 import '../widgets/ui_kit.dart';
+
+
 
 class ApplicationFormView extends StatefulWidget {
   /// If non-null the form pre-fills with this application and runs in

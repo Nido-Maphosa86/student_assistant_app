@@ -1,10 +1,16 @@
+/*
+Student numbers
+223039784 Nido Maphosa
+223035639 PM Lesekele
+219007064 T Dasheka
+221001040 K.Loape
+224020157 KP Molelekeng
+          Authentication screen - the single entry point for both students
+          and admins (Assignment: "single authentication mechanism for all
+          users"). After successful sign-in, AuthWrapper routes the user to      
+            the correct portal based on role.
 
-// Authentication screen - the single entry point for both students
-//          and admins (Assignment: "single authentication mechanism for all
-//          users"). After successful sign-in, AuthWrapper routes the user to      
-//the correct portal based on role.
-
-
+*/
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../app_theme.dart';

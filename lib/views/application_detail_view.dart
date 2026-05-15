@@ -1,22 +1,128 @@
+
 // ignore_for_file: deprecated_member_use
 
-/* File: application_detail_view.dart
-/// Purpose: Application Detail Screen (Assignment 1.4 - Read/Delete).
-///          Shows full details of a submitted application. The student can
-///          edit (while pending) or delete it after confirmation.
-*/
+/*
 
+*/
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Clipboard - standard Flutter, no new package
 import 'package:provider/provider.dart';
 import '../app_theme.dart';
 import '../models/application_model.dart';
 import '../routes/route_manager.dart';
 import '../viewmodels/application_viewmodel.dart';
+import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/ui_kit.dart';
 
 class ApplicationDetailView extends StatelessWidget {
   final ApplicationModel application;
   const ApplicationDetailView({required this.application, super.key});
+
+  /// Shows a dialog with the supporting document URL so the admin (or
+  /// student) can review the file. Tapping "Copy link" copies the URL
+  /// to the clipboard - the admin can then open it in any browser to
+  /// see the uploaded PDF or image.
+  ///
+  /// We deliberately don't introduce a new package like url_launcher
+  /// here - Units 1 to 5 don't cover external URL launchers. Supabase
+  /// gives us the public URL (Unit 5) and the standard Clipboard
+  /// service is enough for the admin to access the file.
+  void _showDocumentDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: AppTheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppTheme.accent.withOpacity(0.15),
+                  border: Border.all(
+                      color: AppTheme.accent.withOpacity(0.4)),
+                ),
+                child: Text('DOCUMENT',
+                    style: AppTheme.label.copyWith(color: AppTheme.accent)),
+              ),
+              const SizedBox(height: 16),
+              Text('Supporting', style: AppTheme.displayMd),
+              Text(
+                'document.',
+                style: AppTheme.displayMd.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: AppTheme.accent,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'This is the public URL of the document stored in '
+                'Supabase Storage. Copy it and paste it into your browser '
+                'to view the file.',
+                style: AppTheme.bodyMuted,
+              ),
+              const SizedBox(height: 16),
+              // The URL itself - selectable so admin can copy manually too.
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppTheme.canvas,
+                  border: Border.all(color: AppTheme.border),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: SelectableText(
+                  url,
+                  style: AppTheme.mono.copyWith(fontSize: 11),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlineButton(
+                      label: 'Close',
+                      onPressed: () => Navigator.pop(ctx),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PrimaryButton(
+                      label: 'Copy link',
+                      icon: Icons.copy,
+                      onPressed: () async {
+                        await Clipboard.setData(ClipboardData(text: url));
+                        if (!ctx.mounted) return;
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: AppTheme.accent,
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                              'Document link copied to clipboard.',
+                              style: TextStyle(
+                                color: AppTheme.canvas,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> _confirmDelete(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -108,14 +214,28 @@ class ApplicationDetailView extends StatelessWidget {
 
     if (!context.mounted) return;
     if (ok) {
-      // Reset back to home (Unit 3 - popUntil pattern)
-      Navigator.popUntil(context, ModalRoute.withName(RouteManager.studentHome));
+      // After deleting, jump back to the AuthWrapper root route which will
+      // re-render the StudentHomeView (now showing the empty state).
+      // We use pushNamedAndRemoveUntil instead of popUntil because the
+      // detail screen was reached via wrapper -> home -> detail, and
+      // popUntil expects a named route in the stack matching studentHome.
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RouteManager.wrapper,
+        (_) => false,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final canEdit = application.status == 'pending';
+    // Read the auth viewmodel to check who is viewing this screen
+    // (Unit 2 - context.read for one-off reads, no rebuild needed).
+    // Admins see the screen for review only; they don't get the
+    // student's edit and delete buttons.
+    final isAdmin = context.read<AuthViewModel>().isAdmin;
+    final canEdit = !isAdmin && application.status == 'pending';
+    final canDelete = !isAdmin;
 
     return Scaffold(
       appBar: AppBar(
@@ -232,39 +352,46 @@ class ApplicationDetailView extends StatelessWidget {
             // ============= SUPPORTING DOCUMENT =============
             if (application.documentUrl != null) ...[
               const SizedBox(height: 12),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: AppTheme.surface,
-                  border: Border.all(color: AppTheme.border),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: AppTheme.accent.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(2),
+              GestureDetector(
+                onTap: () => _showDocumentDialog(context, application.documentUrl!),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surface,
+                    border: Border.all(color: AppTheme.border),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppTheme.accent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        child: const Icon(Icons.description_outlined,
+                            size: 18, color: AppTheme.accent),
                       ),
-                      child: const Icon(Icons.description_outlined,
-                          size: 18, color: AppTheme.accent),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Supporting document',
-                              style: AppTheme.body
-                                  .copyWith(fontWeight: FontWeight.w600)),
-                          Text('Stored in Supabase', style: AppTheme.label),
-                        ],
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Supporting document',
+                                style: AppTheme.body
+                                    .copyWith(fontWeight: FontWeight.w600)),
+                            Text('Tap to view link',
+                                style: AppTheme.label
+                                    .copyWith(color: AppTheme.accent)),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const Icon(Icons.chevron_right,
+                          size: 18, color: AppTheme.textMid),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -272,6 +399,10 @@ class ApplicationDetailView extends StatelessWidget {
             const SizedBox(height: 40),
 
             // ============= ACTIONS =============
+            // The buttons shown depend on who is viewing:
+            // - Students with a pending application: Edit + Delete
+            // - Students with a finalised application: info banner only
+            // - Admins: no edit/delete here (they decide via the dashboard)
             if (canEdit) ...[
               PrimaryButton(
                 label: 'Edit application',
@@ -289,7 +420,8 @@ class ApplicationDetailView extends StatelessWidget {
                 color: AppTheme.rejected,
                 onPressed: () => _confirmDelete(context),
               ),
-            ] else
+            ] else if (canDelete) ...[
+              // Student viewing a finalised (approved/rejected) application
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -306,6 +438,30 @@ class ApplicationDetailView extends StatelessWidget {
                       child: Text(
                         'This application has been reviewed and can no '
                         'longer be edited.',
+                        style: AppTheme.bodyMuted.copyWith(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ] else
+              // Admin viewing - read-only review banner
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppTheme.surface,
+                  border: Border.all(color: AppTheme.border),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.visibility_outlined,
+                        size: 18, color: AppTheme.accent),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Reviewing as administrator. Use the dashboard '
+                        'to approve, reject, or remove this application.',
                         style: AppTheme.bodyMuted.copyWith(fontSize: 13),
                       ),
                     ),

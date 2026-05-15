@@ -1,9 +1,14 @@
-// File: route_manager.dart
-
-// Purpose: Centralised navigation table (Unit 3 - "RouteManager =
-//          receptionist"). Supports both static routes and a dynamic
-//          route for application details (Unit 3 dynamic-route pattern).
-
+/*
+Student numbers
+223039784 Nido Maphosa
+223035639 PM Lesekele
+219007064 T Dasheka
+221001040 K.Loape
+224020157 KP Molelekeng
+/ Purpose: Centralised navigation table (Unit 3 - "RouteManager =
+/          receptionist"). Supports both static routes and a dynamic
+/          route for application details (Unit 3 dynamic-route pattern).
+*/
 import 'package:flutter/material.dart';
 import '../models/application_model.dart';
 import '../views/login_view.dart';

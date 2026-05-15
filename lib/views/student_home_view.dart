@@ -1,10 +1,16 @@
 // ignore_for_file: deprecated_member_use
 
-
+/*
+Student numbers
+223039784 Nido Maphosa
+223035639 PM Lesekele
+219007064 T Dasheka
+221001040 K.Loape
+224020157 KP Molelekeng
 //Student Home screen. Shows
 //         the authenticated student's application activity. Designed as a
 //          "personal dossier" - ID-card style instead of a generic list.
-
+*/
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../app_theme.dart';

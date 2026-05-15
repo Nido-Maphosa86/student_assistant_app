@@ -1,5 +1,10 @@
 
-/* File: auth_wrapper.dart
+/* Student numbers
+223039784 Nido Maphosa
+223035639 PM Lesekele
+219007064 T Dasheka
+221001040 K.Loape
+224020157 KP Molelekeng
 /// Purpose: Decides which screen to show on startup based on the user's
 ///          authentication state and role. Implements the assignment's
 ///          requirement that "the system must direct users to an
