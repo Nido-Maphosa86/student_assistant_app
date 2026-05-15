@@ -1,16 +1,12 @@
-// ignore_for_file: deprecated_member_use
 
-/* Student numbers
-223039784 Nido Maphosa
-223035639 PM Lesekele
-219007064 T Dasheka
-221001040 K.Loape
-224020157 KP Molelekeng
- File: admin_dashboard_view.dart
- Purpose: Admin Dashboard (Assignment 2.1 - Read/Update/Delete operations).
-          Displays all applications, allows filtering by status, and
-          supports approve, reject, and remove actions.
-*/
+/*
+ // Group names
+      ///K Loape 221001040
+      ///P Lesekele 223035639
+      ///NM Maphosa 223039784
+      ///T Dasheka 219007064
+      ///Maleke 222009259
+ */
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
